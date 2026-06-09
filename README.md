@@ -1,4 +1,3 @@
-[README.md](https://github.com/user-attachments/files/28732903/README.md)
 # BlackShield Transportation Website (Real Fleet Photo Version)
 
 This package uses your uploaded real fleet photos for:
