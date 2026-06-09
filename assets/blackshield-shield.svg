@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="160" height="190" viewBox="0 0 160 190">
-  <defs><linearGradient id="gold" x1="0" x2="1" y1="0" y2="1">
-      <stop offset="0" stop-color="#8f6414"/><stop offset=".25" stop-color="#ffe58a"/>
-      <stop offset=".55" stop-color="#c8952d"/><stop offset="1" stop-color="#fff0a5"/></linearGradient></defs>
-  <path d="M80 8 L142 31 L142 91 C142 135 107 166 80 181 C53 166 18 135 18 91 L18 31 Z" fill="#080808" stroke="url(#gold)" stroke-width="6"/>
-  <path d="M40 47 H120 M40 136 H120" stroke="url(#gold)" stroke-width="4"/>
-  <text x="80" y="110" font-family="Georgia,serif" font-size="82" font-weight="900" text-anchor="middle" fill="url(#gold)">B</text>
-  <text x="87" y="113" font-family="Georgia,serif" font-size="62" font-weight="900" text-anchor="middle" fill="none" stroke="#080808" stroke-width="2">S</text>
-</svg>
