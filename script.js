@@ -63,8 +63,9 @@ securityToggle.addEventListener('click', () => {
 const monthLabel = document.getElementById('monthLabel');
 const calendarDays = document.getElementById('calendarDays');
 const pickupDate = document.getElementById('pickupDate');
-let viewDate = new Date(2025, 4, 1);
-let selectedDate = new Date(2025, 4, 20);
+let viewDate = new Date();
+let selectedDate = new Date();
+pickupDate.value = formatDate(selectedDate);
 
 function formatDate(date){
   return date.toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
