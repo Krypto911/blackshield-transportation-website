@@ -100,7 +100,11 @@ img{max-width:100%;display:block}
 .hero-thumb.active,.hero-thumb:hover{border-color:var(--gold2);box-shadow:0 0 0 1px rgba(255,225,137,.35)}
 .hero-thumb img{width:100%;height:95px;object-fit:cover;border-radius:4px}
 
-.control-panel{display:grid;grid-template-columns:34% 35% 31%;border-bottom:1px solid var(--line)}
+.control-panel{
+  display:grid;
+  grid-template-columns:34% 38% 28%;
+  border-bottom:1px solid var(--line);
+}
 .fleet-panel,.reservation-panel,.alerts-panel{
   padding:22px 24px 28px;background:radial-gradient(circle at 50% 0%, rgba(215,164,49,.11), transparent 28%),linear-gradient(180deg,#090909,#030303);
   border-right:1px solid var(--line)
@@ -135,11 +139,53 @@ img{max-width:100%;display:block}
 }
 .calendar-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
 .calendar-head button{background:transparent;border:none;color:#fff;font-size:26px;cursor:pointer}
-.weekdays,.calendar-days{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;text-align:center}
-.weekdays{color:var(--muted);font-size:12px;margin-bottom:13px}
-.calendar-days button{height:30px;border:none;background:transparent;color:#eee;border-radius:50%;cursor:pointer}
-.calendar-days button.muted{color:#656565}
-.calendar-days button.active-day{background:linear-gradient(180deg,#ffe28a,#c88920);color:#090909;font-weight:900}
+.weekdays,
+.calendar-days{
+  display:grid;
+  grid-template-columns:repeat(7, minmax(0, 1fr));
+  gap:6px;
+  text-align:center;
+  width:100%;
+}
+
+.weekdays{
+  color:var(--muted);
+  font-size:11px;
+  margin-bottom:12px;
+}
+
+.weekdays span{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-width:0;
+}
+
+.calendar-days button{
+  width:30px;
+  height:30px;
+  max-width:100%;
+  margin:0 auto;
+  border:none;
+  background:transparent;
+  color:#eee;
+  border-radius:50%;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  line-height:1;
+}
+
+.calendar-days button.muted{
+  color:#656565;
+}
+
+.calendar-days button.active-day{
+  background:linear-gradient(180deg,#ffe28a,#c88920);
+  color:#090909;
+  font-weight:900;
+}
 .reservation-form label{
   display:flex;flex-direction:column;gap:5px;margin-bottom:10px;color:#f1eee8;text-transform:uppercase;font-size:11px;font-weight:900
 }
