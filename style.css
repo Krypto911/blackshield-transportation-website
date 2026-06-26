@@ -407,3 +407,15 @@ input:focus,select:focus,textarea:focus{border-color:var(--gold)}
     font-size: 30px;
   }
 }
+.vehicle-book-link {
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.security-banner .secure-reservation {
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
+}
