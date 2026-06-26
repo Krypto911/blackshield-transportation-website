@@ -3,28 +3,37 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>BlackShield Transportation | Elite Chauffeur & Black Car Service</title>
-  <meta name="description" content="Luxury black car, SUV, executive sprinter, and party bus reservations with optional security chauffeur requests." />
+
+  <meta
+    name="description"
+    content="Luxury black car, SUV, executive sprinter, and party bus reservations with optional security chauffeur requests."
+  />
+
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
   <header class="topbar" id="home">
-    <a class="brand" href="#home">
-      <img src="assets/blackshield-logo-main.png" alt="BlackShield Transportation logo">
+    <a class="brand" href="#home" aria-label="BlackShield Transportation home">
+      <img src="assets/blackshield-logo-main.png" alt="BlackShield Transportation logo" />
     </a>
 
-    <button class="mobile-menu" id="mobileMenu" aria-label="Open menu">☰</button>
+    <button class="mobile-menu" id="mobileMenu" aria-label="Open menu" type="button">
+      ☰
+    </button>
 
     <nav class="main-nav" id="mainNav">
       <a class="active" href="#home">Home</a>
       <a href="#fleet">Fleet</a>
       <a href="#services">Services</a>
-      <a href="#reservations">Reservations</a>
+      <a href="/reservation.html">Reservations</a>
       <a href="#security">Security Chauffeur</a>
       <a href="#contact">Contact</a>
     </nav>
 
-   <a href="/reservation.html">Reservations</a>
+    <a class="reserve-nav" href="/reservation.html">
       <span class="mini-shield">BS</span>
       Reserve Now
     </a>
@@ -33,40 +42,70 @@
   <main>
     <section class="hero">
       <div class="hero-copy">
-        <h1>Elite Chauffeur &<br><span>Black Car Service</span></h1>
+        <h1>
+          Elite Chauffeur &<br />
+          <span>Black Car Service</span>
+        </h1>
+
         <div class="gold-line"></div>
+
         <p>
           BlackShield Transportation delivers discreet, elevated ground travel for
           executives, VIP clients, airport transfers, group events, and private
           engagements. Reserve a luxury chauffeured vehicle or request an armed
           security chauffeur for enhanced protection and peace of mind.
         </p>
+
         <div class="hero-buttons">
-         <a href="/reservation.html">Book Now</a>
+          <a href="/reservation.html" class="gold-btn">Book Now</a>
           <a href="#security" class="dark-gold-btn">Request Security Chauffeur</a>
         </div>
       </div>
 
       <div class="hero-gallery">
         <div class="hero-main">
-          <img id="heroVehicleImage" src="assets/fleet-sedan-studio-front.png" alt="BlackShield Cadillac sedan">
+          <img
+            id="heroVehicleImage"
+            src="assets/fleet-sedan-studio-front.png"
+            alt="BlackShield Cadillac sedan"
+          />
         </div>
 
         <div class="hero-thumbs">
-          <button class="hero-thumb active" data-hero="assets/fleet-sedan-studio-front.png" aria-label="Sedan hero">
-            <img src="assets/fleet-sedan-studio-front.png" alt="Luxury sedan">
+          <button
+            class="hero-thumb active"
+            data-hero="assets/fleet-sedan-studio-front.png"
+            aria-label="Show luxury sedan"
+            type="button"
+          >
+            <img src="assets/fleet-sedan-studio-front.png" alt="Luxury sedan" />
           </button>
 
-          <button class="hero-thumb" data-hero="assets/fleet-escalade-studio-front.png" aria-label="SUV hero">
-            <img src="assets/fleet-escalade-studio-front.png" alt="VIP SUV">
+          <button
+            class="hero-thumb"
+            data-hero="assets/fleet-escalade-studio-front.png"
+            aria-label="Show VIP SUV"
+            type="button"
+          >
+            <img src="assets/fleet-escalade-studio-front.png" alt="VIP SUV" />
           </button>
 
-          <button class="hero-thumb" data-hero="assets/fleet-sprinter-studio-side.png" aria-label="Sprinter hero">
-            <img src="assets/fleet-sprinter-studio-side.png" alt="Executive sprinter">
+          <button
+            class="hero-thumb"
+            data-hero="assets/fleet-sprinter-studio-side.png"
+            aria-label="Show executive sprinter"
+            type="button"
+          >
+            <img src="assets/fleet-sprinter-studio-side.png" alt="Executive sprinter" />
           </button>
 
-          <button class="hero-thumb" data-hero="assets/fleet-party-bus-studio.png" aria-label="Bus hero">
-            <img src="assets/fleet-party-bus-studio.png" alt="Party bus">
+          <button
+            class="hero-thumb"
+            data-hero="assets/fleet-party-bus-studio.png"
+            aria-label="Show party bus"
+            type="button"
+          >
+            <img src="assets/fleet-party-bus-studio.png" alt="Party bus" />
           </button>
         </div>
       </div>
@@ -74,176 +113,144 @@
 
     <section class="control-panel">
       <section class="fleet-panel" id="fleet">
-        <div class="panel-title"><span></span><h2>Choose Your Vehicle</h2><span></span></div>
+        <div class="panel-title">
+          <span></span>
+          <h2>Choose Your Vehicle</h2>
+          <span></span>
+        </div>
 
         <div class="vehicle-track">
-          <article class="vehicle-card selected" data-vehicle="Cadillac XTS Luxury Sedan" data-capacity="1 - 3" data-hero="assets/fleet-sedan-studio-front.png">
+          <article
+            class="vehicle-card selected"
+            data-vehicle="Cadillac XTS Luxury Sedan"
+            data-capacity="1 - 3"
+            data-hero="assets/fleet-sedan-studio-front.png"
+          >
             <div class="vehicle-img-wrap">
-              <img src="assets/fleet-sedan-studio-front.png" alt="Cadillac XTS">
+              <img src="assets/fleet-sedan-studio-front.png" alt="Cadillac XTS luxury sedan" />
             </div>
+
             <h3>Luxury Sedan</h3>
-            <p>Reserve a chauffeur</p>
-            <button>Book This Vehicle</button>
+            <p>Ideal for airport transfers, executive travel, and private rides.</p>
+
+            <a class="vehicle-book-link" href="/reservation.html?vehicle=Cadillac%20XTS%20Luxury%20Sedan">
+              Book This Vehicle
+            </a>
           </article>
 
-          <article class="vehicle-card" data-vehicle="Executive Sprinter Van" data-capacity="8 - 14" data-hero="assets/fleet-sprinter-studio-side.png">
+          <article
+            class="vehicle-card"
+            data-vehicle="Cadillac Escalade VIP SUV"
+            data-capacity="1 - 6"
+            data-hero="assets/fleet-escalade-studio-front.png"
+          >
             <div class="vehicle-img-wrap">
-              <img src="assets/fleet-sprinter-studio-side.png" alt="Executive sprinter van">
+              <img src="assets/fleet-escalade-studio-front.png" alt="Cadillac Escalade VIP SUV" />
             </div>
-            <h3>Executive Sprinter</h3>
-            <p>Book & Reserve</p>
-            <button>Book This Vehicle</button>
-          </article>
 
-          <article class="vehicle-card" data-vehicle="Cadillac Escalade VIP SUV" data-capacity="1 - 6" data-hero="assets/fleet-escalade-studio-front.png">
-            <div class="vehicle-img-wrap">
-              <img src="assets/fleet-escalade-studio-front.png" alt="Cadillac Escalade">
-            </div>
             <h3>VIP SUV</h3>
-            <p>Book & Reserve</p>
-            <button>Book This Vehicle</button>
+            <p>Premium SUV service for VIP clients, corporate travel, and events.</p>
+
+            <a class="vehicle-book-link" href="/reservation.html?vehicle=Cadillac%20Escalade%20VIP%20SUV">
+              Book This Vehicle
+            </a>
           </article>
 
-          <article class="vehicle-card" data-vehicle="BlackShield Party Bus" data-capacity="10 - 24" data-hero="assets/fleet-party-bus-studio.png">
+          <article
+            class="vehicle-card"
+            data-vehicle="Executive Sprinter Van"
+            data-capacity="8 - 14"
+            data-hero="assets/fleet-sprinter-studio-side.png"
+          >
             <div class="vehicle-img-wrap">
-              <img src="assets/fleet-party-bus-studio.png" alt="BlackShield party bus">
+              <img src="assets/fleet-sprinter-studio-side.png" alt="Executive sprinter van" />
             </div>
+
+            <h3>Executive Sprinter</h3>
+            <p>Executive group transportation for business teams and special events.</p>
+
+            <a class="vehicle-book-link" href="/reservation.html?vehicle=Executive%20Sprinter%20Van">
+              Book This Vehicle
+            </a>
+          </article>
+
+          <article
+            class="vehicle-card"
+            data-vehicle="BlackShield Party Bus"
+            data-capacity="10 - 24"
+            data-hero="assets/fleet-party-bus-studio.png"
+          >
+            <div class="vehicle-img-wrap">
+              <img src="assets/fleet-party-bus-studio.png" alt="BlackShield party bus" />
+            </div>
+
             <h3>Party Bus</h3>
-            <p>Group VIP travel</p>
-            <button>Book This Vehicle</button>
+            <p>Group VIP transportation for celebrations, nightlife, and events.</p>
+
+            <a class="vehicle-book-link" href="/reservation.html?vehicle=BlackShield%20Party%20Bus">
+              Book This Vehicle
+            </a>
           </article>
         </div>
 
         <div class="dots">
-          <button class="dot active" data-index="0"></button>
-          <button class="dot" data-index="1"></button>
-          <button class="dot" data-index="2"></button>
-          <button class="dot" data-index="3"></button>
-        </div>
-      </section>
-
-      <section class="reservation-panel" id="reservations">
-        <div class="panel-title"><span></span><h2>Reserve Your Ride</h2><span></span></div>
-
-        <div class="booking-grid">
-          <div class="calendar-card">
-            <div class="calendar-head">
-              <button id="prevMonth" aria-label="Previous month">‹</button>
-              <strong id="monthLabel">May 2025</strong>
-              <button id="nextMonth" aria-label="Next month">›</button>
-            </div>
-
-            <div class="weekdays">
-              <span>SU</span><span>MO</span><span>TU</span><span>WE</span><span>TH</span><span>FR</span><span>SA</span>
-            </div>
-
-            <div class="calendar-days" id="calendarDays"></div>
-          </div>
-
-          <form class="reservation-form" id="reservationForm">
-            <div class="form-row two">
-              <label>Pickup Date
-                <input id="pickupDate" type="text" value="May 20, 2025" readonly>
-              </label>
-
-              <label>Pickup Time
-                <select id="pickupTime">
-                  <option>10:00 AM</option>
-                  <option>11:00 AM</option>
-                  <option>12:00 PM</option>
-                  <option>1:00 PM</option>
-                  <option>2:00 PM</option>
-                  <option>3:00 PM</option>
-                  <option>4:00 PM</option>
-                  <option>5:00 PM</option>
-                  <option>6:00 PM</option>
-                  <option>7:00 PM</option>
-                  <option>8:00 PM</option>
-                  <option>9:00 PM</option>
-                </select>
-              </label>
-            </div>
-
-            <label>Pickup Location
-              <input id="pickupLocation" type="text" placeholder="Enter pickup location" required>
-            </label>
-
-            <label>Drop-off Location
-              <input id="dropLocation" type="text" placeholder="Enter drop-off location" required>
-            </label>
-
-            <div class="form-row two">
-              <label>Vehicle
-                <select id="vehicleSelect">
-                  <option>Cadillac XTS Luxury Sedan</option>
-                  <option>Executive Sprinter Van</option>
-                  <option>Cadillac Escalade VIP SUV</option>
-                  <option>BlackShield Party Bus</option>
-                </select>
-              </label>
-
-              <label>Passengers
-                <select id="passengers">
-                  <option>1 - 3</option>
-                  <option>1 - 6</option>
-                  <option>8 - 14</option>
-                  <option>10 - 24</option>
-                </select>
-              </label>
-            </div>
-
-            <label>Special Requests
-              <textarea id="specialRequests" placeholder="Notes, stops, luggage, etc."></textarea>
-            </label>
-
-            <div class="security-toggle">
-              <span>
-                <img src="assets/blackshield-logo-main.png" alt="BlackShield">
-                Add Armed Security Chauffeur
-              </span>
-              <button type="button" id="securityToggle"><span></span></button>
-            </div>
-          </form>
+          <button class="dot active" data-index="0" type="button" aria-label="Show vehicle 1"></button>
+          <button class="dot" data-index="1" type="button" aria-label="Show vehicle 2"></button>
+          <button class="dot" data-index="2" type="button" aria-label="Show vehicle 3"></button>
+          <button class="dot" data-index="3" type="button" aria-label="Show vehicle 4"></button>
         </div>
       </section>
 
       <section class="alerts-panel" id="services">
-        <div class="panel-title"><span></span><h2>Confirmation & Alerts</h2><span></span></div>
+        <div class="panel-title">
+          <span></span>
+          <h2>Confirmation & Alerts</h2>
+          <span></span>
+        </div>
 
         <div class="check-circle">✓</div>
 
         <p class="alerts-copy">
-          After payment, BlackShield Transportation automatically sends booking alerts by
-          email and text message.
+          Submit your reservation details, pay your secure deposit through Stripe,
+          and BlackShield Transportation will review your trip for final confirmation.
         </p>
 
         <div class="alert-cards">
           <div class="alert-card">
             <div class="alert-icon">✉</div>
             <div>
-              <h3>Email Alert</h3>
-              <p>Booking details sent to your email.</p>
+              <h3>Email Confirmation</h3>
+              <p>Reservation details and payment records are sent securely.</p>
             </div>
           </div>
 
           <div class="alert-card">
             <div class="alert-icon">💬</div>
             <div>
-              <h3>SMS Alert</h3>
-              <p>Instant text confirmation to your mobile.</p>
+              <h3>Reservation Follow-Up</h3>
+              <p>BlackShield will contact you after reviewing vehicle availability.</p>
             </div>
           </div>
         </div>
 
         <div class="payment-card">
-          <img src="assets/blackshield-logo-main.png" alt="BlackShield">
+          <img src="assets/blackshield-logo-main.png" alt="BlackShield Transportation logo" />
+
           <div>
-            <h3>Secure Payment</h3>
-            <p>Your information is encrypted and 100% secure.</p>
+            <h3>Secure Stripe Payment</h3>
+            <p>Your deposit is processed through Stripe’s secure checkout.</p>
           </div>
+
           <div class="cards">
-            <span>VISA</span><span>MC</span><span>AMEX</span><span>DISC</span>
+            <span>VISA</span>
+            <span>MC</span>
+            <span>AMEX</span>
+            <span>DISC</span>
           </div>
+        </div>
+
+        <div class="hero-buttons" style="justify-content: center; margin-top: 30px;">
+          <a href="/reservation.html" class="gold-btn">Start Reservation</a>
         </div>
       </section>
     </section>
@@ -251,57 +258,57 @@
     <section class="gallery-section">
       <div class="section-heading">
         <h2>Fleet Gallery</h2>
-        <p>BlackShield fleet images styled to match your luxury black-and-gold website.</p>
+        <p>BlackShield fleet images styled to match your luxury black-and-gold brand.</p>
       </div>
 
       <div class="gallery-grid">
         <figure>
-          <img src="assets/fleet-sedan-studio-side.png" alt="Cadillac sedan side view">
+          <img src="assets/fleet-sedan-studio-side.png" alt="Cadillac sedan side view" />
           <figcaption>Cadillac XTS side profile</figcaption>
         </figure>
 
         <figure>
-          <img src="assets/fleet-sedan-studio-rear.png" alt="Cadillac sedan rear view">
+          <img src="assets/fleet-sedan-studio-rear.png" alt="Cadillac sedan rear view" />
           <figcaption>Cadillac XTS rear quarter</figcaption>
         </figure>
 
         <figure>
-          <img src="assets/fleet-sedan-studio-front.png" alt="Cadillac sedan front view">
+          <img src="assets/fleet-sedan-studio-front.png" alt="Cadillac sedan front view" />
           <figcaption>Cadillac XTS front view</figcaption>
         </figure>
 
         <figure>
-          <img src="assets/fleet-escalade-studio-front.png" alt="Cadillac Escalade front view">
+          <img src="assets/fleet-escalade-studio-front.png" alt="Cadillac Escalade front view" />
           <figcaption>Escalade front view</figcaption>
         </figure>
 
         <figure>
-          <img src="assets/fleet-escalade-studio-angle.png" alt="Cadillac Escalade angle view">
+          <img src="assets/fleet-escalade-studio-angle.png" alt="Cadillac Escalade angle view" />
           <figcaption>Escalade VIP angle</figcaption>
         </figure>
 
         <figure>
-          <img src="assets/fleet-escalade-studio-rear.png" alt="Cadillac Escalade rear view">
+          <img src="assets/fleet-escalade-studio-rear.png" alt="Cadillac Escalade rear view" />
           <figcaption>Escalade rear quarter</figcaption>
         </figure>
 
         <figure>
-          <img src="assets/fleet-sprinter-studio-side.png" alt="Sprinter side view">
+          <img src="assets/fleet-sprinter-studio-side.png" alt="Sprinter side view" />
           <figcaption>Executive sprinter side</figcaption>
         </figure>
 
         <figure>
-          <img src="assets/fleet-sprinter-studio-profile.png" alt="Sprinter profile view">
+          <img src="assets/fleet-sprinter-studio-profile.png" alt="Sprinter profile view" />
           <figcaption>Executive sprinter profile</figcaption>
         </figure>
 
         <figure>
-          <img src="assets/fleet-sprinter-studio-rear.png" alt="Sprinter rear view">
+          <img src="assets/fleet-sprinter-studio-rear.png" alt="Sprinter rear view" />
           <figcaption>Executive sprinter rear</figcaption>
         </figure>
 
         <figure>
-          <img src="assets/fleet-party-bus-studio.png" alt="Party bus front view">
+          <img src="assets/fleet-party-bus-studio.png" alt="Party bus front view" />
           <figcaption>Party bus</figcaption>
         </figure>
       </div>
@@ -309,7 +316,7 @@
 
     <section class="security-banner" id="security">
       <div class="bottom-logo">
-        <img src="assets/blackshield-logo-main.png" alt="BlackShield Transportation logo">
+        <img src="assets/blackshield-logo-main.png" alt="BlackShield Transportation logo" />
       </div>
 
       <div>
@@ -320,32 +327,29 @@
       <div class="divider"></div>
 
       <p class="banner-copy">
-        Professional chauffeurs, premium vehicles, and unwavering commitment to your safety and comfort.
+        Professional chauffeurs, premium vehicles, and an unwavering commitment to
+        your safety, privacy, and comfort.
       </p>
 
-      <button class="secure-reservation" id="secureReservation">Secure Reservation</button>
+      <a class="secure-reservation" href="/reservation.html">
+        Secure Reservation
+      </a>
     </section>
 
     <section class="contact-section" id="contact">
       <h2>BlackShield Transportation</h2>
-      <p>Elite chauffeur reservations, VIP fleet selections, security chauffeur requests, email alerts, and SMS confirmations.</p>
+
+      <p>
+        Elite chauffeur reservations, VIP fleet selections, security chauffeur requests,
+        airport transportation, corporate travel, and private black car service.
+      </p>
 
       <div class="contact-actions">
-        <a href="tel:+678-743-5639">Call 678-743-5639</a>
-        <a href="mailto:your-email@example.com">Email Reservations</a>
+        <a href="tel:+16787435639">Call 678-743-5639</a>
+        <a href="mailto:reservations@blackshieldtransportation.com">Email Reservations</a>
       </div>
     </section>
   </main>
-
-  <div class="modal" id="confirmModal" aria-hidden="true">
-    <div class="modal-card">
-      <button class="close-modal" id="closeModal">×</button>
-      <img src="assets/blackshield-logo-main.png" alt="BlackShield logo">
-      <h2>Reservation Request Ready</h2>
-      <p id="modalSummary"></p>
-      <a id="emailReservation" class="gold-btn" href="#">Send Reservation Email</a>
-    </div>
-  </div>
 
   <script src="script.js"></script>
 </body>
