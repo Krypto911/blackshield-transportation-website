@@ -302,3 +302,108 @@ input:focus,select:focus,textarea:focus{border-color:var(--gold)}
   .vehicle-track{grid-template-columns:1fr}
   .gallery-grid img{height:210px}
 }
+/* Reservation Form */
+
+.reservation-section {
+  padding: 70px 20px;
+  background: #050505;
+  color: #ffffff;
+}
+
+.reservation-container {
+  max-width: 900px;
+  margin: 0 auto;
+  background: #101010;
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  border-radius: 18px;
+  padding: 40px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.reservation-container h1 {
+  color: #d4af37;
+  font-size: 36px;
+  margin-bottom: 10px;
+}
+
+.reservation-container p {
+  color: #dddddd;
+  line-height: 1.5;
+}
+
+.reservation-form {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #ffffff;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 14px 16px;
+  border-radius: 10px;
+  border: 1px solid #333333;
+  background: #050505;
+  color: #ffffff;
+  font-size: 16px;
+  outline: none;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: #d4af37;
+}
+
+.reservation-submit {
+  margin-top: 12px;
+  padding: 16px 24px;
+  border: none;
+  border-radius: 999px;
+  background: #d4af37;
+  color: #000000;
+  font-size: 17px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.reservation-submit:hover {
+  background: #f2c94c;
+}
+
+.reservation-message {
+  color: #d4af37;
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .reservation-container {
+    padding: 25px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .reservation-container h1 {
+    font-size: 30px;
+  }
+}
