@@ -1,0 +1,14 @@
+{
+  "name": "blackshield-transportation-website",
+  "version": "1.0.0",
+  "description": "BlackShield Transportation website with Stripe Checkout reservation deposits",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.18.3",
+    "stripe": "^17.5.0"
+  }
+}
