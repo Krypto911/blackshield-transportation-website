@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reserve Your Ride | BlackShield Transportation</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <section class="reservation-section">
+    <div class="reservation-container">
+      <h1>Reserve Your BlackShield Ride</h1>
+      <p>
+        Submit your trip details below and continue to secure payment for your
+        $100 reservation deposit.
+      </p>
+
+      <form id="reservationForm" class="reservation-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="customerName">Customer Name *</label>
+            <input type="text" id="customerName" name="customerName" required />
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Phone Number *</label>
+            <input type="tel" id="phone" name="phone" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address *</label>
+          <input type="email" id="email" name="email" required />
+        </div>
+
+        <div class="form-group">
+          <label for="pickupDateTime">Pickup Date & Time *</label>
+          <input type="datetime-local" id="pickupDateTime" name="pickupDateTime" required />
+        </div>
+
+        <div class="form-group">
+          <label for="pickupAddress">Pickup Address *</label>
+          <input type="text" id="pickupAddress" name="pickupAddress" required />
+        </div>
+
+        <div class="form-group">
+          <label for="dropoffAddress">Drop-off Address *</label>
+          <input type="text" id="dropoffAddress" name="dropoffAddress" required />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="vehicleChoice">Vehicle Choice *</label>
+            <select id="vehicleChoice" name="vehicleChoice" required>
+              <option value="">Select Vehicle</option>
+              <option value="Cadillac XTS Sedan">Cadillac XTS Sedan</option>
+              <option value="Cadillac Escalade SUV">Cadillac Escalade SUV</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="tripType">Trip Type *</label>
+            <select id="tripType" name="tripType" required>
+              <option value="">Select Trip Type</option>
+              <option value="Airport Transfer">Airport Transfer</option>
+              <option value="Point-to-Point">Point-to-Point</option>
+              <option value="Hourly Chauffeur">Hourly Chauffeur</option>
+              <option value="Corporate Travel">Corporate Travel</option>
+              <option value="VIP / Security Chauffeur">VIP / Security Chauffeur</option>
+              <option value="Special Event">Special Event</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="passengerCount">Passenger Count *</label>
+            <input type="number" id="passengerCount" name="passengerCount" min="1" max="7" required />
+          </div>
+
+          <div class="form-group">
+            <label for="luggageCount">Luggage Count</label>
+            <input type="number" id="luggageCount" name="luggageCount" min="0" max="20" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="flightNumber">Airport / Flight Number</label>
+          <input type="text" id="flightNumber" name="flightNumber" placeholder="Example: DL 1234" />
+        </div>
+
+        <div class="form-group">
+          <label for="specialInstructions">Special Instructions</label>
+          <textarea id="specialInstructions" name="specialInstructions" rows="4" placeholder="Additional stops, airport notes, security requests, luggage details, etc."></textarea>
+        </div>
+
+        <button type="submit" class="reservation-submit">
+          Pay $100 Reservation Deposit
+        </button>
+
+        <p id="reservationMessage" class="reservation-message"></p>
+      </form>
+    </div>
+  </section>
+
+  <script src="reservation.js"></script>
+</body>
+</html>
