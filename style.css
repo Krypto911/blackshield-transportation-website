@@ -1638,3 +1638,462 @@ img {
     border-radius: 6px;
   }
 }
+/* =========================================================
+   BLACKSHIELD SEO HOMEPAGE SECTIONS
+   ========================================================= */
+
+.skip-link {
+  position: fixed;
+  top: -100px;
+  left: 16px;
+  z-index: 9999;
+  padding: 12px 18px;
+  background: #d8aa43;
+  color: #050505;
+  font-weight: 800;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+.skip-link:focus {
+  top: 16px;
+}
+
+.hero-eyebrow,
+.section-eyebrow,
+.event-banner-eyebrow {
+  margin: 0 0 12px;
+  color: #d8aa43;
+  font-size: 0.8rem;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.hero-trust-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+  margin: 26px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hero-trust-list li {
+  position: relative;
+  padding-left: 18px;
+  color: #bcb5aa;
+  font-size: 0.9rem;
+}
+
+.hero-trust-list li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: #d8aa43;
+  font-weight: 900;
+}
+
+.event-banner {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(58px, 8vw, 100px) 22px;
+  background:
+    linear-gradient(115deg, rgba(4, 4, 4, 0.96), rgba(16, 13, 7, 0.85)),
+    url("assets/fleet-escalade-studio-angle.png") center / cover no-repeat;
+  border-top: 1px solid rgba(216, 170, 67, 0.22);
+  border-bottom: 1px solid rgba(216, 170, 67, 0.22);
+}
+
+.event-banner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 80% 30%, rgba(216, 170, 67, 0.18), transparent 34%);
+}
+
+.event-banner-content {
+  position: relative;
+  z-index: 1;
+  width: min(900px, 100%);
+  margin: 0 auto;
+  text-align: center;
+}
+
+.event-banner h2 {
+  margin: 0 0 18px;
+  color: #ffffff;
+  font-size: clamp(2rem, 4vw, 3.6rem);
+  line-height: 1.08;
+}
+
+.event-banner p {
+  max-width: 760px;
+  margin: 0 auto;
+  color: #d1cbc0;
+  font-size: 1.03rem;
+  line-height: 1.8;
+}
+
+.event-banner-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 28px;
+}
+
+.event-banner small {
+  display: block;
+  max-width: 760px;
+  margin: 24px auto 0;
+  color: #8e887e;
+  line-height: 1.55;
+}
+
+.services-section,
+.service-areas-section,
+.payment-process-section,
+.faq-section,
+.airport-section {
+  padding: clamp(62px, 8vw, 108px) 22px;
+}
+
+.services-section,
+.payment-process-section,
+.faq-section {
+  background: #080808;
+}
+
+.service-areas-section,
+.airport-section {
+  background:
+    radial-gradient(circle at top left, rgba(216, 170, 67, 0.09), transparent 34%),
+    #0d0d0d;
+}
+
+.section-heading {
+  width: min(820px, 100%);
+  margin: 0 auto 42px;
+  text-align: center;
+}
+
+.section-heading h2 {
+  margin: 0 0 16px;
+  color: #ffffff;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  line-height: 1.12;
+}
+
+.section-heading p:last-child {
+  margin: 0;
+  color: #aaa49a;
+  line-height: 1.75;
+}
+
+.services-grid,
+.service-area-grid,
+.process-grid {
+  display: grid;
+  gap: 20px;
+  width: min(1180px, 100%);
+  margin: 0 auto;
+}
+
+.services-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.service-area-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.process-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.service-card,
+.service-area-grid article,
+.process-grid article {
+  position: relative;
+  padding: 28px;
+  border: 1px solid rgba(216, 170, 67, 0.2);
+  border-radius: 8px;
+  background:
+    linear-gradient(145deg, rgba(255,255,255,0.04), rgba(255,255,255,0.015));
+  box-shadow: 0 20px 45px rgba(0,0,0,0.24);
+}
+
+.service-card {
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+}
+
+.service-number,
+.process-grid article > span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(216, 170, 67, 0.45);
+  border-radius: 50%;
+  color: #d8aa43;
+  font-weight: 900;
+}
+
+.service-card h3,
+.service-area-grid h3,
+.process-grid h3 {
+  margin: 0 0 12px;
+  color: #ffffff;
+  font-size: 1.25rem;
+}
+
+.service-card p,
+.service-area-grid p,
+.process-grid p {
+  margin: 0;
+  color: #aaa49a;
+  line-height: 1.7;
+}
+
+.service-card a {
+  display: inline-flex;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 22px;
+  color: #d8aa43;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.service-card a:hover {
+  color: #f0ca73;
+}
+
+.fleet-introduction {
+  width: min(760px, 100%);
+  margin: -8px auto 30px;
+  color: #aaa49a;
+  line-height: 1.7;
+  text-align: center;
+}
+
+.airport-content {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: clamp(30px, 6vw, 70px);
+  align-items: center;
+  width: min(1160px, 100%);
+  margin: 0 auto;
+}
+
+.airport-content h2 {
+  margin: 0 0 18px;
+  color: #ffffff;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+}
+
+.airport-content > div:first-child > p:not(.section-eyebrow) {
+  color: #aaa49a;
+  line-height: 1.8;
+}
+
+.airport-content .gold-btn {
+  margin-top: 18px;
+}
+
+.airport-benefits {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.airport-benefits article {
+  padding: 24px;
+  border: 1px solid rgba(216, 170, 67, 0.2);
+  border-radius: 8px;
+  background: #111111;
+}
+
+.airport-benefits h3 {
+  margin: 0 0 10px;
+  color: #ffffff;
+}
+
+.airport-benefits p {
+  margin: 0;
+  color: #99938a;
+  line-height: 1.6;
+}
+
+.centered-cta {
+  margin-top: 36px;
+  text-align: center;
+}
+
+.faq-list {
+  width: min(900px, 100%);
+  margin: 0 auto;
+}
+
+.faq-list details {
+  border-bottom: 1px solid rgba(216, 170, 67, 0.18);
+  background: rgba(255,255,255,0.015);
+}
+
+.faq-list summary {
+  cursor: pointer;
+  padding: 22px 18px;
+  color: #ffffff;
+  font-weight: 800;
+  list-style: none;
+}
+
+.faq-list summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-list summary::after {
+  content: "+";
+  float: right;
+  color: #d8aa43;
+  font-size: 1.3rem;
+}
+
+.faq-list details[open] summary::after {
+  content: "−";
+}
+
+.faq-list details p {
+  margin: 0;
+  padding: 0 18px 22px;
+  color: #aaa49a;
+  line-height: 1.75;
+}
+
+.business-contact {
+  margin-top: 24px;
+  color: #99938a;
+  font-style: normal;
+  line-height: 1.8;
+}
+
+.business-contact a {
+  color: #d8aa43;
+}
+
+.site-footer {
+  padding: 56px 22px 24px;
+  background: #050505;
+  border-top: 1px solid rgba(216, 170, 67, 0.18);
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.4fr repeat(3, 1fr);
+  gap: 34px;
+  width: min(1180px, 100%);
+  margin: 0 auto;
+}
+
+.footer-grid img {
+  width: auto;
+  max-width: 210px;
+  max-height: 70px;
+  object-fit: contain;
+}
+
+.footer-grid p {
+  max-width: 380px;
+  color: #8e887f;
+  line-height: 1.7;
+}
+
+.footer-grid h2 {
+  margin: 0 0 16px;
+  color: #ffffff;
+  font-size: 1rem;
+}
+
+.footer-grid a {
+  display: block;
+  margin-bottom: 10px;
+  color: #aaa49a;
+  text-decoration: none;
+}
+
+.footer-grid a:hover {
+  color: #d8aa43;
+}
+
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  width: min(1180px, 100%);
+  margin: 40px auto 0;
+  padding-top: 22px;
+  border-top: 1px solid rgba(255,255,255,0.07);
+}
+
+.footer-bottom p {
+  margin: 0;
+  color: #777169;
+  font-size: 0.78rem;
+  line-height: 1.6;
+}
+
+@media (max-width: 980px) {
+  .services-grid,
+  .service-area-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .process-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .airport-content {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 680px) {
+  .services-grid,
+  .service-area-grid,
+  .process-grid,
+  .airport-benefits,
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .event-banner-actions {
+    flex-direction: column;
+  }
+
+  .event-banner-actions a {
+    width: 100%;
+  }
+
+  .hero-trust-list {
+    flex-direction: column;
+  }
+
+  .service-card {
+    min-height: 0;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+  }
+}
