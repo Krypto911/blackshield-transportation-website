@@ -1,31 +1,359 @@
 require("dotenv").config();
 
+const crypto = require("crypto");
 const express = require("express");
-const Stripe = require("stripe");
 const path = require("path");
+const Stripe = require("stripe");
 
 const app = express();
-const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
+const PORT = Number(process.env.PORT) || 3000;
+const BASE_URL = String(
+  process.env.BASE_URL ||
+  process.env.DOMAIN ||
+  "http://localhost:3000"
+).replace(/\/$/, "");
 
-app.use(express.json());
-app.use(express.static(__dirname));
+if (!process.env.STRIPE_SECRET_KEY) {
+  console.error("Missing STRIPE_SECRET_KEY environment variable.");
+  process.exit(1);
+}
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
+/*
+|--------------------------------------------------------------------------
+| BlackShield pricing
+|--------------------------------------------------------------------------
+| All dollar amounts are converted to cents before being sent to Stripe.
+| Customers cannot submit their own payment amount.
+*/
+
+const AIRPORT_RATES = {
+  zone1: {
+    sedan: 75,
+    suv: 100
+  },
+  zone2: {
+    sedan: 100,
+    suv: 125
+  },
+  zone3: {
+    sedan: 150,
+    suv: 175
+  }
+};
+
+const HOURLY_RATES = {
+  sedan: {
+    hourlyRate: 75,
+    minimumHours: 2
+  },
+  suv: {
+    hourlyRate: 90,
+    minimumHours: 2
+  },
+  sprinter: {
+    hourlyRate: 125,
+    minimumHours: 4
+  },
+  stretch: {
+    hourlyRate: 125,
+    minimumHours: 4
+  },
+  minibus: {
+    hourlyRate: 150,
+    minimumHours: 4
+  }
+};
+
+const VEHICLE_LABELS = {
+  sedan: "Luxury Sedan",
+  suv: "Luxury SUV",
+  sprinter: "Executive Sprinter Van",
+  stretch: "Stretch Limousine",
+  minibus: "Mini Bus"
+};
+
+const PAYMENT_PERCENTAGES = {
+  full: 1,
+  deposit_25: 0.25,
+  deposit_50: 0.5
+};
+
+/*
+|--------------------------------------------------------------------------
+| Stripe webhook
+|--------------------------------------------------------------------------
+| This route must appear before express.json().
+*/
+
+app.post(
+  "/stripe-webhook",
+  express.raw({ type: "application/json" }),
+  (req, res) => {
+    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+    const signature = req.headers["stripe-signature"];
+
+    if (!webhookSecret) {
+      console.error("Missing STRIPE_WEBHOOK_SECRET.");
+      return res.status(500).send("Webhook secret is not configured.");
+    }
+
+    if (!signature) {
+      return res.status(400).send("Missing Stripe signature.");
+    }
+
+    let event;
+
+    try {
+      event = stripe.webhooks.constructEvent(
+        req.body,
+        signature,
+        webhookSecret
+      );
+    } catch (error) {
+      console.error("Stripe webhook signature error:", error.message);
+      return res.status(400).send("Invalid webhook signature.");
+    }
+
+    if (event.type === "checkout.session.completed") {
+      const session = event.data.object;
+
+      console.log("BlackShield payment completed:", {
+        reservationId: session.client_reference_id,
+        checkoutSessionId: session.id,
+        paymentStatus: session.payment_status,
+        amountTotal: session.amount_total,
+        customerEmail: session.customer_details?.email,
+        metadata: session.metadata
+      });
+
+      /*
+       * Later, this is where we will:
+       * 1. Save the confirmed reservation.
+       * 2. Email BlackShield Transportation.
+       * 3. Email the customer.
+       * 4. Send the confirmed purchase event to GA4.
+       */
+    }
+
+    res.json({ received: true });
+  }
+);
+
+app.use(express.json({ limit: "100kb" }));
+app.use(express.urlencoded({ extended: false }));
+app.use(express.static(path.join(__dirname)));
+
+function cleanText(value, maximumLength = 500) {
+  return String(value ?? "")
+    .trim()
+    .replace(/\s+/g, " ")
+    .slice(0, maximumLength);
+}
+
+function normalizeVehicle(vehicleChoice) {
+  const value = cleanText(vehicleChoice, 100).toLowerCase();
+
+  if (value.includes("xts") || value.includes("sedan")) {
+    return "sedan";
+  }
+
+  if (value.includes("escalade") || value.includes("suv")) {
+    return "suv";
+  }
+
+  if (value.includes("sprinter")) {
+    return "sprinter";
+  }
+
+  if (value.includes("stretch") || value.includes("limousine")) {
+    return "stretch";
+  }
+
+  if (
+    value.includes("mini bus") ||
+    value.includes("minibus") ||
+    value.includes("party bus")
+  ) {
+    return "minibus";
+  }
+
+  throw new Error("Please select a valid vehicle.");
+}
+
+function normalizeZone(zone) {
+  const value = cleanText(zone, 20)
+    .toLowerCase()
+    .replace(/\s+/g, "");
+
+  const zoneMap = {
+    "1": "zone1",
+    zone1: "zone1",
+    "2": "zone2",
+    zone2: "zone2",
+    "3": "zone3",
+    zone3: "zone3"
+  };
+
+  const normalizedZone = zoneMap[value];
+
+  if (!normalizedZone) {
+    throw new Error("Please select a valid airport zone.");
+  }
+
+  return normalizedZone;
+}
+
+function normalizePaymentOption(paymentOption) {
+  const option = cleanText(paymentOption, 30).toLowerCase();
+
+  if (!Object.prototype.hasOwnProperty.call(PAYMENT_PERCENTAGES, option)) {
+    throw new Error("Please select a valid payment option.");
+  }
+
+  return option;
+}
+
+function isSameDayOrImmediateReservation(pickupDateTime) {
+  const pickupDate = new Date(pickupDateTime);
+
+  if (Number.isNaN(pickupDate.getTime())) {
+    throw new Error("Please enter a valid pickup date and time.");
+  }
+
+  const hoursUntilPickup =
+    (pickupDate.getTime() - Date.now()) / (1000 * 60 * 60);
+
+  if (hoursUntilPickup < 0) {
+    throw new Error("Pickup time cannot be in the past.");
+  }
+
+  return hoursUntilPickup <= 24;
+}
+
+function calculateTripPrice({
+  tripType,
+  vehicleKey,
+  zone,
+  requestedHours
+}) {
+  const normalizedTripType = cleanText(tripType, 100).toLowerCase();
+
+  if (normalizedTripType.includes("airport")) {
+    if (!["sedan", "suv"].includes(vehicleKey)) {
+      throw new Error(
+        "Sprinter, limousine, and mini-bus airport reservations require hourly service."
+      );
+    }
+
+    const normalizedZone = normalizeZone(zone);
+    const totalDollars = AIRPORT_RATES[normalizedZone][vehicleKey];
+
+    return {
+      serviceType: "airport",
+      totalDollars,
+      rateDescription: `${normalizedZone.replace(
+        "zone",
+        "Zone "
+      )} airport transfer`
+    };
+  }
+
+  if (
+    normalizedTripType.includes("hourly") ||
+    normalizedTripType.includes("corporate") ||
+    normalizedTripType.includes("security") ||
+    normalizedTripType.includes("special event")
+  ) {
+    const rate = HOURLY_RATES[vehicleKey];
+    const submittedHours = Number(requestedHours);
+
+    if (!Number.isFinite(submittedHours) || submittedHours <= 0) {
+      throw new Error("Please enter the number of service hours.");
+    }
+
+    const billableHours = Math.max(
+      Math.ceil(submittedHours),
+      rate.minimumHours
+    );
+
+    return {
+      serviceType: "hourly",
+      totalDollars: billableHours * rate.hourlyRate,
+      billableHours,
+      hourlyRate: rate.hourlyRate,
+      minimumHours: rate.minimumHours,
+      rateDescription: `${billableHours} hours at $${rate.hourlyRate} per hour`
+    };
+  }
+
+  throw new Error(
+    "This trip requires a custom quote. Please call BlackShield Transportation."
+  );
+}
+
+function calculateAmountDue(totalDollars, paymentOption) {
+  const percentage = PAYMENT_PERCENTAGES[paymentOption];
+  return Math.round(totalDollars * percentage * 100);
+}
+
+function paymentOptionLabel(paymentOption) {
+  const labels = {
+    full: "Full Payment",
+    deposit_25: "25% Reservation Deposit",
+    deposit_50: "50% Reservation Deposit"
+  };
+
+  return labels[paymentOption];
+}
+
+app.post("/calculate-price", (req, res) => {
+  try {
+    const vehicleKey = normalizeVehicle(req.body.vehicleChoice);
+
+    const pricing = calculateTripPrice({
+      tripType: req.body.tripType,
+      vehicleKey,
+      zone: req.body.zone,
+      requestedHours: req.body.requestedHours
+    });
+
+    res.json({
+      vehicleKey,
+      vehicleLabel: VEHICLE_LABELS[vehicleKey],
+      totalDollars: pricing.totalDollars,
+      totalFormatted: `$${pricing.totalDollars.toFixed(2)}`,
+      rateDescription: pricing.rateDescription,
+      minimumHours: pricing.minimumHours || null,
+      billableHours: pricing.billableHours || null
+    });
+  } catch (error) {
+    res.status(400).json({
+      error: error.message || "Unable to calculate reservation price."
+    });
+  }
+});
 
 app.post("/create-checkout-session", async (req, res) => {
   try {
-    const {
-      customerName,
-      phone,
-      email,
-      pickupDateTime,
-      pickupAddress,
-      dropoffAddress,
-      vehicleChoice,
-      passengerCount,
-      luggageCount,
-      flightNumber,
-      tripType,
-      specialInstructions
-    } = req.body;
+    const customerName = cleanText(req.body.customerName, 100);
+    const phone = cleanText(req.body.phone, 40);
+    const email = cleanText(req.body.email, 150).toLowerCase();
+    const pickupDateTime = cleanText(req.body.pickupDateTime, 80);
+    const pickupAddress = cleanText(req.body.pickupAddress, 250);
+    const dropoffAddress = cleanText(req.body.dropoffAddress, 250);
+    const vehicleChoice = cleanText(req.body.vehicleChoice, 100);
+    const tripType = cleanText(req.body.tripType, 100);
+    const passengerCount = cleanText(req.body.passengerCount, 10);
+    const luggageCount = cleanText(req.body.luggageCount || "0", 10);
+    const flightNumber = cleanText(req.body.flightNumber || "N/A", 50);
+    const specialInstructions = cleanText(
+      req.body.specialInstructions || "N/A",
+      500
+    );
+    const zone = cleanText(req.body.zone, 20);
+    const requestedHours = cleanText(req.body.requestedHours, 10);
 
     if (
       !customerName ||
@@ -39,65 +367,152 @@ app.post("/create-checkout-session", async (req, res) => {
       !tripType
     ) {
       return res.status(400).json({
-        error: "Missing required reservation fields."
+        error: "Please complete all required reservation fields."
       });
     }
+
+    const vehicleKey = normalizeVehicle(vehicleChoice);
+    let paymentOption = normalizePaymentOption(req.body.paymentOption);
+
+    const pricing = calculateTripPrice({
+      tripType,
+      vehicleKey,
+      zone,
+      requestedHours
+    });
+
+    /*
+     * Reservations within 24 hours must be paid in full.
+     */
+    if (isSameDayOrImmediateReservation(pickupDateTime)) {
+      paymentOption = "full";
+    }
+
+    const amountDueCents = calculateAmountDue(
+      pricing.totalDollars,
+      paymentOption
+    );
+
+    if (amountDueCents < 50) {
+      throw new Error("The payment amount is below Stripe’s minimum.");
+    }
+
+    const reservationId = `BS-${crypto
+      .randomUUID()
+      .split("-")[0]
+      .toUpperCase()}`;
 
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
       customer_email: email,
+      client_reference_id: reservationId,
+
       line_items: [
         {
-          price: process.env.PRICE_ID_RESERVATION_DEPOSIT,
+          price_data: {
+            currency: "usd",
+            unit_amount: amountDueCents,
+            product_data: {
+              name: `${paymentOptionLabel(paymentOption)} — ${
+                VEHICLE_LABELS[vehicleKey]
+              }`,
+              description: `${pricing.rateDescription}. Trip total: $${pricing.totalDollars.toFixed(
+                2
+              )}.`
+            }
+          },
           quantity: 1
         }
       ],
-      success_url: `${process.env.DOMAIN}/success.html?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.DOMAIN}/cancel.html`,
+
+      success_url: `${BASE_URL}/success.html?session_id={CHECKOUT_SESSION_ID}&reservation_id=${reservationId}`,
+      cancel_url: `${BASE_URL}/cancel.html`,
+
+      billing_address_collection: "auto",
+      phone_number_collection: {
+        enabled: true
+      },
+
       metadata: {
+        reservationId,
         customerName,
         phone,
         email,
         pickupDateTime,
         pickupAddress,
         dropoffAddress,
+        vehicleKey,
         vehicleChoice,
         passengerCount,
-        luggageCount: luggageCount || "N/A",
-        flightNumber: flightNumber || "N/A",
+        luggageCount,
+        flightNumber,
         tripType,
-        specialInstructions: specialInstructions || "N/A"
+        zone: zone || "N/A",
+        requestedHours: requestedHours || "N/A",
+        paymentOption,
+        tripTotalDollars: pricing.totalDollars.toFixed(2),
+        amountDueDollars: (amountDueCents / 100).toFixed(2),
+        remainingBalanceDollars: (
+          pricing.totalDollars -
+          amountDueCents / 100
+        ).toFixed(2),
+        specialInstructions
       },
+
       payment_intent_data: {
-        description: `BlackShield reservation deposit for ${customerName}`,
+        description: `${paymentOptionLabel(
+          paymentOption
+        )} for BlackShield reservation ${reservationId}`,
+
         metadata: {
+          reservationId,
           customerName,
           phone,
-          email,
           pickupDateTime,
-          pickupAddress,
-          dropoffAddress,
-          vehicleChoice,
-          tripType
+          vehicleKey,
+          tripType,
+          paymentOption,
+          tripTotalDollars: pricing.totalDollars.toFixed(2),
+          remainingBalanceDollars: (
+            pricing.totalDollars -
+            amountDueCents / 100
+          ).toFixed(2)
         }
       }
     });
 
-    res.json({ url: session.url });
+    res.json({
+      url: session.url,
+      reservationId,
+      tripTotal: pricing.totalDollars,
+      amountDue: amountDueCents / 100,
+      paymentOption
+    });
   } catch (error) {
     console.error("Stripe Checkout error:", error);
-    res.status(500).json({
-      error: "Unable to create Stripe Checkout session."
+
+    res.status(400).json({
+      error:
+        error.message ||
+        "Unable to start payment. Please call BlackShield Transportation."
     });
   }
 });
 
 app.get("/health", (req, res) => {
-  res.send("BlackShield server is running.");
+  res.json({
+    status: "ok",
+    service: "BlackShield Transportation",
+    stripeConfigured: Boolean(process.env.STRIPE_SECRET_KEY),
+    webhookConfigured: Boolean(process.env.STRIPE_WEBHOOK_SECRET)
+  });
 });
 
-const PORT = process.env.PORT || 3000;
+app.get("*", (req, res) => {
+  res.status(404).sendFile(path.join(__dirname, "index.html"));
+});
 
 app.listen(PORT, () => {
   console.log(`BlackShield server running on port ${PORT}`);
+  console.log(`Website URL: ${BASE_URL}`);
 });
