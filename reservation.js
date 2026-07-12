@@ -1,48 +1,496 @@
-const reservationForm = document.getElementById("reservationForm");
-const reservationMessage = document.getElementById("reservationMessage");
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-reservationForm.addEventListener("submit", async function (event) {
-  event.preventDefault();
+  <title>Reserve Atlanta Black Car Service | BlackShield Transportation</title>
 
-  reservationMessage.textContent = "Preparing secure Stripe Checkout...";
+  <meta
+    name="description"
+    content="Reserve Atlanta black car service, ATL airport transportation, executive SUV service, luxury sedan service, Sprinter vans, stretch limousines, and group transportation with BlackShield Transportation."
+  />
 
-  const formData = new FormData(reservationForm);
+  <link
+    rel="canonical"
+    href="https://www.blackshieldtransportation.com/reservation.html"
+  />
 
-  const reservationData = {
-    customerName: formData.get("customerName"),
-    phone: formData.get("phone"),
-    email: formData.get("email"),
-    pickupDateTime: formData.get("pickupDateTime"),
-    pickupAddress: formData.get("pickupAddress"),
-    dropoffAddress: formData.get("dropoffAddress"),
-    vehicleChoice: formData.get("vehicleChoice"),
-    passengerCount: formData.get("passengerCount"),
-    luggageCount: formData.get("luggageCount"),
-    flightNumber: formData.get("flightNumber"),
-    tripType: formData.get("tripType"),
-    specialInstructions: formData.get("specialInstructions")
-  };
+  <meta property="og:type" content="website" />
+  <meta
+    property="og:title"
+    content="Reserve Atlanta Black Car Service | BlackShield Transportation"
+  />
+  <meta
+    property="og:description"
+    content="Book luxury airport transportation, private chauffeur service, executive SUVs, sedans, Sprinter vans, and group transportation throughout Metro Atlanta."
+  />
+  <meta
+    property="og:url"
+    content="https://www.blackshieldtransportation.com/reservation.html"
+  />
 
-  try {
-    const response = await fetch("/create-checkout-session", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(reservationData)
-    });
+  <link rel="stylesheet" href="style.css" />
+</head>
 
-    const data = await response.json();
+<body class="reservation-page">
+  <header class="reservation-header">
+    <a
+      class="reservation-brand"
+      href="/"
+      aria-label="Return to BlackShield Transportation home"
+    >
+      <img
+        src="assets/blackshield-logo-main.png"
+        alt="BlackShield Transportation"
+      />
+    </a>
 
-    if (data.url) {
-      window.location.href = data.url;
-    } else {
-      reservationMessage.textContent =
-        data.error || "Unable to start payment. Please call BlackShield Transportation.";
-    }
-  } catch (error) {
-    console.error(error);
-    reservationMessage.textContent =
-      "Something went wrong. Please call or text BlackShield Transportation to complete your reservation.";
-  }
-});
+    <div class="reservation-header-actions">
+      <a href="tel:+16787435639" class="reservation-phone">
+        Call 678-743-5639
+      </a>
+
+      <a href="/" class="reservation-home-link">
+        Return Home
+      </a>
+    </div>
+  </header>
+
+  <main>
+    <section class="reservation-hero">
+      <div class="reservation-hero-content">
+        <p class="reservation-eyebrow">
+          Atlanta Luxury Transportation
+        </p>
+
+        <h1>Reserve Your BlackShield Transportation Service</h1>
+
+        <p>
+          Request private black car service, ATL airport transportation,
+          corporate chauffeur service, luxury event transportation, Sprinter
+          service, or group transportation throughout Metro Atlanta.
+        </p>
+      </div>
+    </section>
+
+    <section class="reservation-section">
+      <div class="reservation-container">
+        <div class="reservation-intro">
+          <h2>Trip Details</h2>
+
+          <p>
+            Complete the form below to calculate your transportation rate and
+            choose whether to pay in full, pay a 25% deposit, or pay a 50%
+            deposit.
+          </p>
+        </div>
+
+        <form id="reservationForm" class="reservation-form" novalidate>
+          <fieldset class="reservation-fieldset">
+            <legend>Customer Information</legend>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="customerName">Full Name *</label>
+                <input
+                  type="text"
+                  id="customerName"
+                  name="customerName"
+                  autocomplete="name"
+                  maxlength="100"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="phone">Phone Number *</label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  autocomplete="tel"
+                  maxlength="40"
+                  placeholder="678-743-5639"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email Address *</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                autocomplete="email"
+                maxlength="150"
+                required
+              />
+            </div>
+          </fieldset>
+
+          <fieldset class="reservation-fieldset">
+            <legend>Transportation Details</legend>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="pickupDateTime">Pickup Date and Time *</label>
+                <input
+                  type="datetime-local"
+                  id="pickupDateTime"
+                  name="pickupDateTime"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="tripType">Service Type *</label>
+                <select id="tripType" name="tripType" required>
+                  <option value="">Select Service Type</option>
+                  <option value="Airport Transfer">Airport Transfer</option>
+                  <option value="Hourly Chauffeur">Hourly Chauffeur</option>
+                  <option value="Corporate Travel">Corporate Travel</option>
+                  <option value="VIP / Security Chauffeur">
+                    VIP / Security Chauffeur
+                  </option>
+                  <option value="Special Event">Special Event</option>
+                  <option value="Point-to-Point">
+                    Point-to-Point Custom Quote
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="pickupAddress">Pickup Address *</label>
+              <input
+                type="text"
+                id="pickupAddress"
+                name="pickupAddress"
+                autocomplete="street-address"
+                maxlength="250"
+                placeholder="Enter the complete pickup address"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="dropoffAddress">Drop-Off Address *</label>
+              <input
+                type="text"
+                id="dropoffAddress"
+                name="dropoffAddress"
+                maxlength="250"
+                placeholder="Enter the complete destination address"
+                required
+              />
+            </div>
+          </fieldset>
+
+          <fieldset class="reservation-fieldset">
+            <legend>Vehicle and Pricing</legend>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="vehicleChoice">Vehicle Choice *</label>
+
+                <select id="vehicleChoice" name="vehicleChoice" required>
+                  <option value="">Select Vehicle</option>
+                  <option value="Cadillac XTS Luxury Sedan">
+                    Luxury Sedan
+                  </option>
+                  <option value="Cadillac Escalade VIP SUV">
+                    Luxury SUV
+                  </option>
+                  <option value="Executive Sprinter Van">
+                    Executive Sprinter Van
+                  </option>
+                  <option value="Stretch Limousine">
+                    Stretch Limousine
+                  </option>
+                  <option value="Mini Bus">
+                    Mini Bus
+                  </option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="zone">Airport Zone</label>
+
+                <select id="zone" name="zone">
+                  <option value="">Select Airport Zone</option>
+                  <option value="zone1">
+                    Zone 1 — Within approximately 25 miles of ATL
+                  </option>
+                  <option value="zone2">
+                    Zone 2 — Approximately 26 to 40 miles from ATL
+                  </option>
+                  <option value="zone3">
+                    Zone 3 — Approximately 41 to 54 miles from ATL
+                  </option>
+                </select>
+
+                <small class="field-help">
+                  Required for sedan and SUV airport transfers.
+                </small>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="requestedHours">Requested Service Hours</label>
+
+                <input
+                  type="number"
+                  id="requestedHours"
+                  name="requestedHours"
+                  min="1"
+                  max="24"
+                  step="1"
+                  placeholder="Example: 4"
+                />
+
+                <small class="field-help">
+                  Required for hourly, corporate, security, and special-event
+                  reservations.
+                </small>
+              </div>
+
+              <div class="form-group">
+                <label for="passengerCount">Passenger Count *</label>
+
+                <input
+                  type="number"
+                  id="passengerCount"
+                  name="passengerCount"
+                  min="1"
+                  max="40"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="luggageCount">Luggage Count</label>
+
+                <input
+                  type="number"
+                  id="luggageCount"
+                  name="luggageCount"
+                  min="0"
+                  max="50"
+                  value="0"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="flightNumber">Airline and Flight Number</label>
+
+                <input
+                  type="text"
+                  id="flightNumber"
+                  name="flightNumber"
+                  maxlength="50"
+                  placeholder="Example: Delta DL 1234"
+                />
+              </div>
+            </div>
+
+            <button
+              type="button"
+              id="calculatePriceButton"
+              class="calculate-price-button"
+            >
+              Calculate Reservation Price
+            </button>
+
+            <p
+              id="pricingMessage"
+              class="reservation-message"
+              role="status"
+              aria-live="polite"
+            ></p>
+          </fieldset>
+
+          <section
+            id="priceSummary"
+            class="price-summary"
+            aria-live="polite"
+            hidden
+          >
+            <div class="price-summary-heading">
+              <div>
+                <p class="summary-eyebrow">Estimated Transportation Rate</p>
+                <h2 id="summaryVehicle">Selected Vehicle</h2>
+              </div>
+
+              <strong id="summaryTotal">$0.00</strong>
+            </div>
+
+            <dl class="price-summary-list">
+              <div>
+                <dt>Rate details</dt>
+                <dd id="summaryDescription">—</dd>
+              </div>
+
+              <div>
+                <dt>Trip total</dt>
+                <dd id="summaryTripTotal">$0.00</dd>
+              </div>
+            </dl>
+
+            <p class="price-summary-note">
+              Final confirmation is subject to vehicle availability, complete
+              trip details, waiting time, additional stops, tolls, parking,
+              holiday surcharges, and special requests.
+            </p>
+          </section>
+
+          <fieldset
+            id="paymentOptionsSection"
+            class="reservation-fieldset payment-options-section"
+            hidden
+          >
+            <legend>Choose Your Payment Option</legend>
+
+            <div class="payment-option-grid">
+              <label class="payment-option-card">
+                <input
+                  type="radio"
+                  name="paymentOption"
+                  value="full"
+                  required
+                />
+
+                <span class="payment-option-content">
+                  <strong>Pay in Full</strong>
+                  <span>Pay the complete reservation total today.</span>
+                  <b id="fullPaymentAmount">$0.00 today</b>
+                </span>
+              </label>
+
+              <label class="payment-option-card">
+                <input
+                  type="radio"
+                  name="paymentOption"
+                  value="deposit_25"
+                  required
+                />
+
+                <span class="payment-option-content">
+                  <strong>Pay a 25% Deposit</strong>
+                  <span>Reserve your vehicle with 25% today.</span>
+                  <b id="deposit25Amount">$0.00 today</b>
+                </span>
+              </label>
+
+              <label class="payment-option-card">
+                <input
+                  type="radio"
+                  name="paymentOption"
+                  value="deposit_50"
+                  required
+                />
+
+                <span class="payment-option-content">
+                  <strong>Pay a 50% Deposit</strong>
+                  <span>Pay half today and the balance before service.</span>
+                  <b id="deposit50Amount">$0.00 today</b>
+                </span>
+              </label>
+            </div>
+
+            <p class="payment-policy">
+              Reservations scheduled within 24 hours require full payment.
+              Your payment does not guarantee vehicle availability until
+              BlackShield Transportation confirms the reservation.
+            </p>
+          </fieldset>
+
+          <fieldset class="reservation-fieldset">
+            <legend>Additional Information</legend>
+
+            <div class="form-group">
+              <label for="specialInstructions">Special Instructions</label>
+
+              <textarea
+                id="specialInstructions"
+                name="specialInstructions"
+                rows="5"
+                maxlength="500"
+                placeholder="Add additional stops, airport instructions, accessibility needs, child-seat requests, security requests, luggage details, or other transportation notes."
+              ></textarea>
+            </div>
+
+            <label class="terms-checkbox">
+              <input
+                type="checkbox"
+                id="termsAccepted"
+                name="termsAccepted"
+                required
+              />
+
+              <span>
+                I confirm that the trip information is accurate and understand
+                that the reservation remains pending until BlackShield
+                Transportation confirms vehicle availability.
+              </span>
+            </label>
+          </fieldset>
+
+          <button
+            type="submit"
+            id="reservationSubmit"
+            class="reservation-submit"
+            disabled
+          >
+            Continue to Secure Stripe Checkout
+          </button>
+
+          <p
+            id="reservationMessage"
+            class="reservation-message"
+            role="status"
+            aria-live="polite"
+          ></p>
+
+          <p class="secure-payment-note">
+            Payments are processed securely through Stripe. BlackShield
+            Transportation does not store your complete card number.
+          </p>
+        </form>
+
+        <aside class="reservation-support">
+          <h2>Need a Custom Quote?</h2>
+
+          <p>
+            Call BlackShield Transportation for long-distance travel,
+            multi-stop itineraries, recurring corporate transportation,
+            protective chauffeur requests, and custom group reservations.
+          </p>
+
+          <div class="reservation-support-actions">
+            <a href="tel:+16787435639">Call 678-743-5639</a>
+
+            <a href="mailto:reservations@blackshieldtransportation.com">
+              Email Reservations
+            </a>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="reservation-footer">
+    <p>
+      © 2026 BlackShield Transportation. Atlanta black car service, luxury
+      airport transportation, executive chauffeur service, and group
+      transportation throughout Metro Atlanta.
+    </p>
+  </footer>
+
+  <script src="reservation.js"></script>
+</body>
+</html>
