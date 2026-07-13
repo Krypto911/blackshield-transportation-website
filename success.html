@@ -3,26 +3,64 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Reservation Received | BlackShield Transportation</title>
+
+  <meta name="robots" content="noindex, nofollow" />
+
+  <title>Payment Received | BlackShield Transportation</title>
+
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
-  <section class="reservation-section">
+  <main class="reservation-section">
     <div class="reservation-container">
-      <h1>Reservation Request Received</h1>
+      <p class="eyebrow">BLACKSHIELD TRANSPORTATION</p>
+
+      <h1>Payment Received</h1>
+
       <p>
-        Thank you for choosing BlackShield Transportation. Your $100 reservation
-        deposit has been received.
+        Thank you for choosing BlackShield Transportation. Your payment was
+        successfully submitted through Stripe.
       </p>
+
+      <p id="reservation-reference" hidden>
+        Reservation reference:
+        <strong id="reservation-id"></strong>
+      </p>
+
       <p>
-        Your ride is not fully confirmed until BlackShield Transportation reviews
-        your trip details, verifies vehicle availability, and sends your final
-        confirmation.
+        Your payment receipt does not automatically guarantee vehicle
+        availability. A BlackShield representative will review your trip
+        information and contact you with the final reservation confirmation.
       </p>
-      <a href="/" class="reservation-submit" style="display:inline-block;text-decoration:none;">
-        Return Home
+
+      <p>
+        For immediate assistance, call
+        <a href="tel:+16787435639">(678) 743-5639</a>
+        or email
+        <a href="mailto:reservations@blackshieldtransportation.com">
+          reservations@blackshieldtransportation.com
+        </a>.
+      </p>
+
+      <a
+        href="/"
+        class="reservation-submit"
+        style="display:inline-block;text-decoration:none;"
+      >
+        Return to Home Page
       </a>
     </div>
-  </section>
+  </main>
+
+  <script>
+    const parameters = new URLSearchParams(window.location.search);
+    const reservationId = parameters.get("reservation_id");
+
+    if (reservationId) {
+      document.getElementById("reservation-id").textContent = reservationId;
+      document.getElementById("reservation-reference").hidden = false;
+    }
+  </script>
 </body>
 </html>
