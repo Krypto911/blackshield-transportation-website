@@ -79,11 +79,54 @@
 
   <script>
     const parameters = new URLSearchParams(window.location.search);
+    const sessionId = parameters.get("session_id");
     const reservationId = parameters.get("reservation_id");
 
     if (reservationId) {
       document.getElementById("reservation-id").textContent = reservationId;
       document.getElementById("reservation-reference").hidden = false;
+    }
+
+    let reservationData = null;
+
+    try {
+      reservationData = JSON.parse(
+        sessionStorage.getItem("blackshieldReservation") || "null"
+      );
+    } catch (error) {
+      console.error("Unable to read reservation tracking data:", error);
+    }
+
+    if (
+      sessionId &&
+      reservationId &&
+      reservationData &&
+      reservationData.reservationId === reservationId
+    ) {
+      const trackingKey =
+        "blackshieldPurchaseTracked:" + sessionId;
+
+      if (!sessionStorage.getItem(trackingKey)) {
+        const amountPaid = Number(reservationData.amountDue);
+        const tripTotal = Number(reservationData.tripTotal);
+
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+          event: "purchase",
+          transaction_id: sessionId,
+          reservation_id: reservationId,
+          value: Number.isFinite(amountPaid) ? amountPaid : 0,
+          currency: "USD",
+          trip_total:
+            Number.isFinite(tripTotal) ? tripTotal : 0,
+          payment_option:
+            reservationData.paymentOption || "",
+          vehicle: reservationData.vehicle || "",
+          service_type: reservationData.serviceType || ""
+        });
+
+        sessionStorage.setItem(trackingKey, "true");
+      }
     }
   </script>
 </body>
