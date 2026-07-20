@@ -80,3 +80,14 @@ alter table public.reservations enable row level security;
 
 -- No public RLS policy is created. Only the private server-side
 -- Supabase secret key performs reservation writes.
+
+-- Permit the private server-side service role to manage reservations.
+grant usage on schema public to service_role;
+
+grant select, insert, update, delete
+on table public.reservations
+to service_role;
+
+grant usage, select
+on all sequences in schema public
+to service_role;
