@@ -223,5 +223,6 @@ async function createReservationEvent({
 }
 
 module.exports = {
-  createReservationEvent
+  createReservationEvent,
+  localDateTimeToUtc
 };

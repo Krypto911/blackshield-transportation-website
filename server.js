@@ -6,8 +6,7 @@ const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
 const path = require("path");
 const Stripe = require("stripe");
-const { Resend } = require("resend");
-const { createReservationEvent } = require("./calendar");
+const { processCompletedCheckout } = require("./reservation-workflow");
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
@@ -24,19 +23,6 @@ if (!process.env.STRIPE_SECRET_KEY) {
 }
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-
-if (
-  !process.env.RESEND_API_KEY ||
-  !process.env.RESERVATION_FROM_EMAIL ||
-  !process.env.RESERVATION_TO_EMAIL
-) {
-  console.error(
-    "Missing Resend reservation email environment variables."
-  );
-  process.exit(1);
-}
-
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 /*
 |--------------------------------------------------------------------------
@@ -111,7 +97,6 @@ app.post(
     const signature = req.headers["stripe-signature"];
 
     if (!webhookSecret) {
-      console.error("Missing STRIPE_WEBHOOK_SECRET.");
       return res.status(500).send("Webhook secret is not configured.");
     }
 
@@ -128,126 +113,35 @@ app.post(
         webhookSecret
       );
     } catch (error) {
-      console.error(
-        "Stripe webhook signature error:",
-        error.message
-      );
-
-      return res
-        .status(400)
-        .send("Invalid webhook signature.");
+      console.error("Stripe signature error:", error.message);
+      return res.status(400).send("Invalid webhook signature.");
     }
 
-    if (event.type === "checkout.session.completed") {
-      const session = event.data.object;
-      const metadata = session.metadata || {};
-      const reservationId =
-        session.client_reference_id ||
-        metadata.reservationId ||
-        "Unknown";
+    const paidCheckoutEvents = new Set([
+      "checkout.session.completed",
+      "checkout.session.async_payment_succeeded"
+    ]);
 
-      console.log("BlackShield payment completed:", {
-        reservationId,
-        checkoutSessionId: session.id,
-        paymentStatus: session.payment_status,
-        amountTotal: session.amount_total,
-        customerEmail: session.customer_details?.email,
-        metadata
-      });
-
+    if (paidCheckoutEvents.has(event.type)) {
       try {
-        const calendarResult = await createReservationEvent({
-          session,
-          reservationId
+        const result = await processCompletedCheckout({
+          session: event.data.object,
+          stripeEventId: event.id
         });
 
-        console.log(
-          calendarResult.created
-            ? "Calendar event created:"
-            : "Calendar event already exists:",
-          calendarResult.eventId
-        );
-      } catch (error) {
-        console.error(
-          "Calendar event failed:",
-          error.message
-        );
-
-        return res
-          .status(500)
-          .send("Calendar event creation failed.");
-      }
-
-      try {
-        const amountPaid = (
-          Number(session.amount_total || 0) / 100
-        ).toFixed(2);
-
-        const notification = await resend.emails.send({
-          from: process.env.RESERVATION_FROM_EMAIL,
-          to: [process.env.RESERVATION_TO_EMAIL],
-          replyTo:
-            metadata.email ||
-            session.customer_details?.email ||
-            undefined,
-          subject:
-            `PAID RESERVATION ${reservationId} — ${metadata.customerName || "Customer"}`,
-          text: [
-            "BLACKSHIELD TRANSPORTATION — PAID RESERVATION",
-            "",
-            `Reservation ID: ${reservationId}`,
-            `Stripe session: ${session.id}`,
-            `Payment status: ${session.payment_status || "unknown"}`,
-            `Amount paid: ${amountPaid}`,
-            `Trip total: ${metadata.tripTotalDollars || "N/A"}`,
-            `Remaining balance: ${metadata.remainingBalanceDollars || "0.00"}`,
-            `Payment option: ${metadata.paymentOption || "N/A"}`,
-            "",
-            `Customer: ${metadata.customerName || "N/A"}`,
-            `Phone: ${metadata.phone || "N/A"}`,
-            `Email: ${metadata.email || session.customer_details?.email || "N/A"}`,
-            "",
-            `Pickup date/time: ${metadata.pickupDateTime || "N/A"}`,
-            `Pickup address: ${metadata.pickupAddress || "N/A"}`,
-            `Drop-off address: ${metadata.dropoffAddress || "N/A"}`,
-            `Trip type: ${metadata.tripType || "N/A"}`,
-            `Vehicle: ${metadata.vehicleChoice || metadata.vehicleKey || "N/A"}`,
-            `Passengers: ${metadata.passengerCount || "N/A"}`,
-            `Luggage: ${metadata.luggageCount || "N/A"}`,
-            `Flight number: ${metadata.flightNumber || "N/A"}`,
-            `Airport zone: ${metadata.zone || "N/A"}`,
-            `Requested hours: ${metadata.requestedHours || "N/A"}`,
-            "",
-            `Special instructions: ${metadata.specialInstructions || "N/A"}`
-          ].join("\n")
+        console.log("Reservation workflow result:", {
+          stripeEventId: event.id,
+          processed: result.processed,
+          reservationId: result.reservationId || null,
+          reason: result.reason || null
         });
-
-        if (notification.error) {
-          throw new Error(
-            notification.error.message ||
-            "Resend rejected the notification."
-          );
-        }
-
-        console.log(
-          "Reservation notification sent:",
-          notification.data?.id
-        );
       } catch (error) {
-        console.error(
-          "Reservation notification failed:",
-          error.message
-        );
-
-        return res
-          .status(500)
-          .send("Reservation notification failed.");
+        console.error("Reservation workflow failed:", error.message);
+        return res.status(500).send("Reservation workflow failed.");
       }
     }
 
-    return res.json({
-      received: true
-    });
+    return res.json({ received: true });
   }
 );
 
@@ -813,15 +707,30 @@ app.post(
 */
 
 app.get("/health", (req, res) => {
-  return res.json({
-    status: "ok",
-    service: "BlackShield Transportation",
-    stripeConfigured: Boolean(
-      process.env.STRIPE_SECRET_KEY
+  const services = {
+    stripe: Boolean(process.env.STRIPE_SECRET_KEY),
+    stripeWebhook: Boolean(process.env.STRIPE_WEBHOOK_SECRET),
+    supabase: Boolean(
+      process.env.SUPABASE_URL && process.env.SUPABASE_SECRET_KEY
     ),
-    webhookConfigured: Boolean(
-      process.env.STRIPE_WEBHOOK_SECRET
+    resend: Boolean(
+      process.env.RESEND_API_KEY &&
+      process.env.RESERVATION_FROM_EMAIL &&
+      process.env.RESERVATION_TO_EMAIL
+    ),
+    googleCalendar: Boolean(
+      process.env.GOOGLE_CALENDAR_CREDENTIALS &&
+      process.env.GOOGLE_CALENDAR_ID &&
+      process.env.GOOGLE_CALENDAR_TIMEZONE
     )
+  };
+
+  const healthy = Object.values(services).every(Boolean);
+
+  return res.status(healthy ? 200 : 503).json({
+    status: healthy ? "ok" : "degraded",
+    service: "BlackShield Transportation",
+    integrations: services
   });
 });
 
